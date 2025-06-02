@@ -1,20 +1,22 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  const PORT = parseInt(process.env.PORT, 10) || 4000;
+
   const config = new DocumentBuilder()
-    .setTitle('REST Service')
-    .setDescription('The REST Service API description')
+    .setTitle('Home Library Service')
     .setVersion('1.0')
-    .addTag('service')
     .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
-
-  await app.listen(4000);
+  await app.listen(PORT);
 }
 bootstrap();
