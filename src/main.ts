@@ -10,10 +10,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   const PORT = parseInt(process.env.PORT, 10) || 4000;
 
-  const config = new DocumentBuilder()
-    .setTitle('Home Library Service')
-    .setVersion('1.0')
-    .build();
+  const config = new DocumentBuilder().setTitle('Home Library Service').build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
