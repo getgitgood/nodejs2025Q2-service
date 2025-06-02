@@ -1,38 +1,48 @@
 import {
-  Body,
   Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
   Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+  HttpStatus,
+  HttpCode,
+  ParseUUIDPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UsersService } from './users.service';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { UserService } from './user.service';
+import { CreateUserDto, UpdateUserDto } from './dto';
 
-@ApiTags('Users')
-@Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
-
-  @Get()
-  @ApiOperation({ summary: 'Get all users', description: 'Gets all users' })
-  @ApiResponse({ status: 200, description: 'Successful operation' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  findAll() {
-    return this.usersService.findAll();
-  }
+@Controller('user')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create user', description: 'Creates a new user' })
-  @ApiResponse({ status: 201, description: 'The user has been created.' })
-  @ApiResponse({
-    status: 400,
-    description: 'Bad request. body does not contain required fields',
-  })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return this.userService.create(createUserDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.userService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.userService.findOne(id);
+  }
+
+  @Put(':id')
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(id, updateUserDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.userService.remove(id);
   }
 }

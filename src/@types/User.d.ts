@@ -7,14 +7,14 @@ interface User {
   updatedAt: number;
 }
 
-type UserPassword = Omit<User, 'password'>;
+type UserUpdatePassword = Omit<User, 'password'>;
 
 interface ICreateUserDto {
   login: string;
   password: string;
 }
 
-interface IUpdatePasswordDto {
+interface UpdatePasswordDto {
   prevPassword: string;
   newPassword: string;
 }

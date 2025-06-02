@@ -1,15 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { Module } from '@nestjs/common';
+import { UserService } from './user.service';
+import { UserController } from './user.controller';
 
-@Injectable()
-export class UsersService {
-  findAll() {
-    // TODO: fetch users
-    return [{ id: 1, login: 'user1' }];
-  }
-
-  create(createUserDto: CreateUserDto) {
-    // TODO: create new user
-    return { id: 2, ...createUserDto };
-  }
-}
+@Module({
+  controllers: [UserController],
+  providers: [UserService],
+})
+export class UserModule {}
