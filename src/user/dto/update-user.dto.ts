@@ -7,7 +7,7 @@ export class UpdateUserDto implements UpdatePasswordDto {
   @Transform(
     ({ value }: TransformFnParams) => typeof value === 'string' && value.trim(),
   )
-  readonly prevPassword: string;
+  readonly oldPassword: string;
 
   @IsString()
   @IsNotEmpty()

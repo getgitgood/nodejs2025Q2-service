@@ -80,7 +80,7 @@ export class UserService {
   update(id: string, updateUserDto: UpdateUserDto): UserUpdatePassword {
     const user = this.findUser(id);
 
-    if (user.password !== updateUserDto.prevPassword)
+    if (user.password !== updateUserDto.oldPassword)
       throw new ForbiddenException('Password don`t match with old password');
 
     const updatedUser = {

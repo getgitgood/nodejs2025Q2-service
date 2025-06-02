@@ -15,6 +15,6 @@ interface ICreateUserDto {
 }
 
 interface UpdatePasswordDto {
-  prevPassword: string;
+  oldPassword: string;
   newPassword: string;
 }
