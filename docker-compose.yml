@@ -1,0 +1,44 @@
+services:
+  nest-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-service
+    depends_on:
+      - db-service
+    ports:
+      - '${PORT}:${PORT}'
+    volumes:
+      - /user/app/server
+    environment:
+      POSTGRES_HOST: '${POSTGRES_CONTAINER_NAME}'
+      POSTGRES_PORT: '${POSTGRES_PORT}'
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+      POSTGRES_DB: '${POSTGRES_DB}'
+    networks:
+      - app-network
+
+  db-service:
+    build:
+      context: ./postgreSQL
+      dockerfile: Dockerfile
+    container_name: '${POSTGRES_CONTAINER_NAME}'
+    restart: always
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    volumes:
+      - ./postgreSQL/data:/var/lib/postgresql/data
+      - ./postgreSQL/logs:/logs
+    environment:
+      POSTGRES_DB: '${POSTGRES_DB}'
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+    networks:
+      - app-network
+    command: postgres -c logging_collector=on -c log_destination=stderr -c log_directory=/logs
+
+networks:
+  app-network:
+    name: 'app-network'
